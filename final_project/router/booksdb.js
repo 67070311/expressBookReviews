@@ -1,47 +1,14 @@
-const express = require('express');
-const jwt = require('jsonwebtoken');
-const session = require('express-session');
+let books = {
+  1: {"author": "Chinua Achebe","title": "Things Fall Apart", "reviews": {} },
+  2: {"author": "Hans Christian Andersen","title": "Fairy tales", "reviews": {} },
+  3: {"author": "Dante Alighieri","title": "The Divine Comedy", "reviews": {} },
+  4: {"author": "Unknown","title": "The Epic Of Gilgamesh", "reviews": {} },
+  5: {"author": "Unknown","title": "The Book Of Job", "reviews": {} },
+  6: {"author": "Unknown","title": "One Thousand and One Nights", "reviews": {} },
+  7: {"author": "Unknown","title": "Njál's Saga", "reviews": {} },
+  8: {"author": "Jane Austen","title": "Pride and Prejudice", "reviews": {} },
+  9: {"author": "Honoré de Balzac","title": "Le Père Goriot", "reviews": {} },
+  10: {"author": "Samuel Beckett","title": "Molloy, Malone Dies, The Unnamable, the trilogy", "reviews": {} }
+}
 
-const customer_routes = require('./router/auth_users.js').authenticated;
-const genl_routes = require('./router/general.js').general;
-
-const app = express();
-
-app.use(express.json());
-
-app.use(
-    "/customer",
-    session({
-        secret: "fingerprint_customer",
-        resave: true,
-        saveUninitialized: true
-    })
-);
-
-app.use("/customer/auth/*", function auth(req, res, next) {
-    const accessToken =
-        req.session.authorization &&
-        req.session.authorization.accessToken;
-
-    if (!accessToken) {
-        return res.status(403).json({
-            message: "User not authenticated"
-        });
-    }
-
-    try {
-        jwt.verify(accessToken, "access");
-        next();
-    } catch (err) {
-        return res.status(403).json({
-            message: "Invalid or expired token"
-        });
-    }
-});
-
-const PORT = 5000;
-
-app.use("/customer", customer_routes);
-app.use("/", genl_routes);
-
-app.listen(PORT, () => console.log("Server is running"));
+module.exports = books;
